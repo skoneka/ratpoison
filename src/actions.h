@@ -102,6 +102,7 @@ cmdret *command (int interactive, char *data);
 /* command function prototypes. */
 #define RP_CMD(cmd) cmdret *cmd_ ## cmd (int interactive, struct cmdarg **args)
 RP_CMD (abort);
+RP_CMD (hidemsg);
 RP_CMD (addhook);
 RP_CMD (alias);
 RP_CMD (banish);
@@ -187,6 +188,9 @@ RP_CMD (unsetenv);
 RP_CMD (v_split);
 RP_CMD (verbexec);
 RP_CMD (version);
+RP_CMD (vdump);
+RP_CMD (vinit);
+RP_CMD (vselect);
 RP_CMD (warp);
 RP_CMD (windows);
 RP_CMD (readkey);
