@@ -148,6 +148,7 @@ RP_CMD (gselect);
 RP_CMD (h_split);
 RP_CMD (help);
 RP_CMD (info);
+RP_CMD (keypress);
 RP_CMD (kill);
 RP_CMD (lastmsg);
 RP_CMD (license);

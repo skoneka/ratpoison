@@ -280,6 +280,7 @@ init_user_commands(void)
                "Split: ", arg_STRING);
   add_command ("info",          cmd_info,       1, 0, 0,
                "Format: ", arg_REST);
+  add_command ("keypress",          cmd_keypress,       1, 1, 1);
   add_command ("kill",          cmd_kill,       0, 0, 0);
   add_command ("lastmsg",       cmd_lastmsg,    0, 0, 0);
   add_command ("license",       cmd_license,    0, 0, 0);
@@ -1154,6 +1155,37 @@ cmd_source (int interactive UNUSED, struct cmdarg **args)
       read_rc_file (fileptr);
       fclose (fileptr);
     }
+
+  return cmdret_new (RET_SUCCESS, NULL);
+}
+
+cmdret *
+cmd_keypress (int interactive, struct cmdarg **args)
+{
+  cmdret *ret = NULL;
+  struct rp_key key;
+  XEvent ev1, ev;
+  ev = rp_current_event;
+
+  if (current_window() == NULL) 
+    return cmdret_new (RET_FAILURE, NULL);
+
+  ev1.xkey.type = KeyPress;
+  ev1.xkey.display = dpy;
+  ev1.xkey.window = current_window()->w;
+
+  if((ret = parse_keydesc (args[0]->string, &key)))
+       return ret;
+
+  ev1.xkey.state = rp_mask_to_x11_mask (key.state);
+  if(!(ev1.xkey.keycode = XKeysymToKeycode (dpy, key.sym)))
+       return cmdret_new (RET_FAILURE, NULL);
+
+  XSendEvent (dpy, current_window()->w, False, KeyPressMask, &ev1);
+
+  /*   XTestFakeKeyEvent (dpy, XKeysymToKeycode (dpy, 't'), True, 0); */
+
+  XSync (dpy, False);
 
   return cmdret_new (RET_SUCCESS, NULL);
 }
